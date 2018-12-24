@@ -19,7 +19,7 @@ def send_simple_message(subject, body):
         "https://api.mailgun.net/v3/sandboxa313a26c7b2844958ec9d2e253f4f306.mailgun.org/messages",
         auth=("api", api_key),
         data={"from": "Mailgun Sandbox <postmaster@sandboxa313a26c7b2844958ec9d2e253f4f306.mailgun.org>",
-              "o:testmode": True,
+              "o:testmode": False,
               "to": "Fernando Serrano <nandosb@gmail.com>",
               "subject": subject,
               "text": body}
