@@ -8,7 +8,7 @@ def get_api_key():
     api_key = api_key_file.read()
     api_key_file.close()
 
-    return api_key
+    return api_key.strip()
 
 
 def send_simple_message(subject, body):
