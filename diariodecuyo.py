@@ -4,13 +4,14 @@ import re
 import json
 import mailgun
 import urllib2
+import common
 from bs4 import BeautifulSoup
 
 
 def fetch():
     """Fetch pick ups."""
     base_url = 'http://www.clasicuyo.com.ar/'
-    filter = 'Busqueda.php?s=camionetas-utilitarios&r=vehiculos'
+    filter = 'Busqueda.php?r=vehiculos'
 
     request = urllib2.Request(base_url + filter)
     request.add_header('Referer', 'http://www.python.org/')
@@ -28,7 +29,7 @@ def fetch():
 
         info = card_item.text.strip()
 
-        model = re.search('Amarok|Ranger|Hilux|S10|S-10', info, re.IGNORECASE)
+        model = re.search('Duster', info, re.IGNORECASE)
 
         data = {}
 
@@ -36,7 +37,7 @@ def fetch():
 
             data['model'] = model.group(0)
 
-            year = re.search('2015|2016|2017|2018|2019', info, re.IGNORECASE)
+            year = re.search('201[2-7]', info, re.IGNORECASE)
 
             if year and year.group(0):
 
@@ -94,9 +95,10 @@ def clean_candidates(vehicles, last_known_id):
 def main():
     """App controller."""
     vehicles_candidates = fetch()
-    last_id = get_last_id()
 
-    vehicles, new_id = clean_candidates(vehicles_candidates, last_id)
+    last_id = common.get_last_id('diariodecuyo')
+
+    vehicles, new_id = common.clean_candidates(vehicles_candidates, last_id)
 
     print vehicles
     print last_id
@@ -106,7 +108,7 @@ def main():
         email_subject = "Nuevas camionetas Diario de Cuyo"
         email_body = json.dumps(vehicles)
         mailgun.send_simple_message(email_subject, email_body)
-        set_last_id(new_id)
+        common.set_last_id(new_id, 'diariodecuyo')
 
 
 if __name__ == '__main__':

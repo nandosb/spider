@@ -4,13 +4,14 @@ import re
 import json
 import mailgun
 import urllib2
+import common
 from bs4 import BeautifulSoup
 
 
 def fetch():
     """Fetch pick ups."""
     base_url = 'https://clasificados.losandes.com.ar'
-    filter = '/mira/sSearch?microsite_id=1&Category%5BRadio%5D%5B%5D=55231&CategoryString%5BRadio%5D%5B%5D=camionetas&microsite_id=1&microsite_name=automotores&Price%5Bfrom%5D=&Price%5Bto%5D=&Category%5BRadio%5D%5B%5D=55231&CategoryString%5BRadio%5D%5B%5D=camionetas&microsite_id=1&microsite_name=automotores&Price%5Bfrom%5D=&Price%5Bto%5D=&page=#filter-sidebar'
+    filter = '/mira/sSearch?words=duster&m=automotores#filter-sidebar'
 
     request = urllib2.Request(base_url + filter)
     request.add_header('Referer', 'http://www.python.org/')
@@ -27,14 +28,14 @@ def fetch():
     for card_item in soup.select('div[class*="public-ad"]'):
         info = card_item.find('h5', {'class': 'font-bold'}).text.strip()
 
-        model = re.search('Amarok|Ranger|Hilux|S10|S-10', info, re.IGNORECASE)
+        model = re.search('Duster', info, re.IGNORECASE)
 
         data = {}
 
         if model and model.group(0):
             data['model'] = model.group(0)
 
-            year = re.search('2015|2016|2017|2018|2019', info, re.IGNORECASE)
+            year = re.search('201[2-7]', info, re.IGNORECASE)
 
             if year and year.group(0):
 
@@ -89,9 +90,10 @@ def clean_candidates(vehicles, last_known_id):
 def main():
     """App controller."""
     vehicles_candidates = fetch()
-    last_id = get_last_id()
 
-    vehicles, new_id = clean_candidates(vehicles_candidates, last_id)
+    last_id = common.get_last_id('losandes')
+
+    vehicles, new_id = common.clean_candidates(vehicles_candidates, last_id)
 
     print vehicles
     print last_id
@@ -101,8 +103,7 @@ def main():
         email_subject = "Nuevas camionetas Los Andes"
         email_body = json.dumps(vehicles)
         mailgun.send_simple_message(email_subject, email_body)
-        set_last_id(new_id)
-
+        common.set_last_id(new_id, 'losandes')
 
 if __name__ == '__main__':
     main()

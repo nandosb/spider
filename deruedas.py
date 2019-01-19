@@ -3,6 +3,7 @@
 import re
 import json
 import mailgun
+import common
 from urllib2 import urlopen
 from bs4 import BeautifulSoup
 
@@ -11,7 +12,7 @@ def fetch():
     """Fetch pick ups."""
     # Get a file-like object using urllib2.urlopen
     base_url = 'https://www.deruedas.com.ar/'
-    html = urlopen(base_url + 'bus.asp?segmento=1')
+    html = urlopen(base_url + 'bus.asp?segmento=0')
 
     soup = BeautifulSoup(html, features="html.parser")
 
@@ -24,21 +25,29 @@ def fetch():
 
         data['id'] = int(div['id'][4:])
 
-        brand = re.search('Ford|Chevrolet|Volkswagen', card.text, re.IGNORECASE)
+        brand = re.search(
+            'Renault',
+            card.text,
+            re.IGNORECASE
+        )
 
         if brand:
             data['brand'] = brand.group(0)
-            model = re.search('Amarok|Ranger|Hilux', card.text, re.IGNORECASE)
+            model = re.search('Duster', card.text, re.IGNORECASE)
 
             if model:
                 data['model'] = model.group(0)
-                year = re.search('2014|2015|2016|2017|2018|2019', card.text, re.IGNORECASE)
+                year = re.search('201[2-7]', card.text, re.IGNORECASE)
 
                 if year:
                     data['year'] = year.group(0)
                     data['link'] = base_url + 'result.asp?cod={}'.format(data['id'])
 
-                    price = re.search('\$ [0-9]{6,7}', card.text, re.IGNORECASE)
+                    price = re.search(
+                        '\$ [0-9]{6,7}',
+                        card.text,
+                        re.IGNORECASE
+                    )
 
                     if price:
                         data['price'] = price.group(0)
@@ -84,9 +93,10 @@ def clean_candidates(vehicles, last_known_id):
 def main():
     """App controller."""
     vehicles_candidates = fetch()
-    last_id = get_last_id()
 
-    vehicles, new_id = clean_candidates(vehicles_candidates, last_id)
+    last_id = common.get_last_id('deruedas')
+
+    vehicles, new_id = common.clean_candidates(vehicles_candidates, last_id)
 
     print vehicles
     print last_id
@@ -96,8 +106,7 @@ def main():
         email_subject = "Nuevas camionetas DeRuedas"
         email_body = json.dumps(vehicles)
         mailgun.send_simple_message(email_subject, email_body)
-        set_last_id(new_id)
-
+        common.set_last_id(new_id, 'deruedas')
 
 if __name__ == '__main__':
     main()
