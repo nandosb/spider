@@ -1,4 +1,4 @@
-"""Test."""
+"""Lookup for vehicles at DeRuedas.com."""
 
 import re
 import json
