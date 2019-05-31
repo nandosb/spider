@@ -3,7 +3,6 @@
 import re
 import json
 import mailgun
-import urllib2
 import common
 from bs4 import BeautifulSoup
 
@@ -13,13 +12,7 @@ def fetch():
     base_url = 'http://www.clasicuyo.com.ar/'
     filter = 'Busqueda.php?r=vehiculos'
 
-    request = urllib2.Request(base_url + filter)
-    request.add_header('Referer', 'http://www.python.org/')
-    request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/53')
-    request.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8')
-    request.add_header('Accept-Language', 'es-US,es;q=0.9,en-US;q=0.8,en;q=0.7,es-419;q=0.6')
-
-    html = urllib2.urlopen(request)
+    html = common.fetch_html(base_url + filter)
 
     soup = BeautifulSoup(html, features="html.parser")
 
@@ -29,7 +22,7 @@ def fetch():
 
         info = card_item.text.strip()
 
-        model = re.search('Duster', info, re.IGNORECASE)
+        model = re.search('HR-?V', info, re.IGNORECASE)
 
         data = {}
 
@@ -37,7 +30,7 @@ def fetch():
 
             data['model'] = model.group(0)
 
-            year = re.search('201[2-7]', info, re.IGNORECASE)
+            year = re.search('201[7-9]', info, re.IGNORECASE)
 
             if year and year.group(0):
 

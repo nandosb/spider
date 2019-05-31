@@ -12,7 +12,9 @@ def fetch():
     """Fetch pick ups."""
     # Get a file-like object using urllib2.urlopen
     base_url = 'https://www.deruedas.com.ar/'
-    html = urlopen(base_url + 'bus.asp?segmento=0')
+    filter = 'bus.asp?segmento=0'
+
+    html = common.fetch_html(base_url + filter)
 
     soup = BeautifulSoup(html, features="html.parser")
 
@@ -26,18 +28,18 @@ def fetch():
         data['id'] = int(div['id'][4:])
 
         brand = re.search(
-            'Renault',
+            'Honda',
             card.text,
             re.IGNORECASE
         )
 
         if brand:
             data['brand'] = brand.group(0)
-            model = re.search('Duster', card.text, re.IGNORECASE)
+            model = re.search('HR-?V', card.text, re.IGNORECASE)
 
             if model:
                 data['model'] = model.group(0)
-                year = re.search('201[2-7]', card.text, re.IGNORECASE)
+                year = re.search('201[7-9]', card.text, re.IGNORECASE)
 
                 if year:
                     data['year'] = year.group(0)
