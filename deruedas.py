@@ -4,7 +4,6 @@ import re
 import json
 import mailgun
 import common
-from urllib2 import urlopen
 from bs4 import BeautifulSoup
 
 
