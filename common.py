@@ -3,6 +3,32 @@ import urllib2
 import ssl
 
 
+def get_known_ids(provider):
+    """Get all the knonw ids for a provider."""
+    filename = ('known_ids_{}.txt').format(provider)
+
+    try:
+        ids = []
+        with open(filename, 'r') as (id_file):
+            raw_ids = id_file.readlines()
+            id_file.close()
+            for raw_id in raw_ids:
+                ids.append(raw_id[:-1])
+            return ids
+    except:
+        initial_value = ''
+        with open(filename, 'w+') as (id_file):
+            id_file.write(initial_value)
+            id_file.close()
+            return []
+
+
+def add_new_id(id, provider):
+    """Add new id to the list of known ids."""
+    with open(('known_ids_{}.txt').format(provider), 'a+') as (id_file):
+        id_file.write(str(id) + '\n')
+
+
 def get_last_id(provider):
     """Load last known id from file."""
     filename = ('last_known_id_{}.txt').format(provider)
@@ -41,8 +67,18 @@ def clean_candidates(vehicles, last_known_id):
     return (results, last_id)
 
 
+def clean_candidates_id_list(candidates, known_ids):
+    """Filter already known properties."""
+    new_elements = []
+    for candidate in candidates:
+        if not candidate['id'] in known_ids:
+            new_elements.append(candidate)
+
+    return new_elements
+
+
 def fetch_html(url):
-    """open an URL an retrieves the HTML"""
+    """Open an URL an retrieves the HTML."""
     context = ssl._create_unverified_context()
     request = urllib2.Request(url)
     request.add_header('Referer', 'http://www.python.org/')
