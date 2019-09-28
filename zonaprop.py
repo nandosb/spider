@@ -22,7 +22,7 @@ def fetch(url):
         data = {}
 
         link_item = card_item['data-to-posting']
-        data['link'] = base_url + link_item
+        data['link'] = base_url + link_item[1:]
         data['id'] = card_item['data-id']
 
         description = card_item.select_one(
