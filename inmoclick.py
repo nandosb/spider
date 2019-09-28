@@ -47,9 +47,10 @@ def fetch():
 
 def main():
     """App controller."""
+    provider = 'inmoclick'
     houses_candidates = fetch()
 
-    known_ids = common.get_known_ids('inmoclick')
+    known_ids = common.get_known_ids(provider)
 
     houses = common.clean_candidates_id_list(houses_candidates, known_ids)
 
@@ -62,7 +63,7 @@ def main():
         email_body = json.dumps(houses)
         mailgun.send_simple_message(email_subject, email_body)
         for house in houses:
-            common.add_new_id(house['id'], 'inmoclick')
+            common.add_new_id(house['id'], provider)
 
 
 if __name__ == '__main__':
