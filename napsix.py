@@ -27,7 +27,7 @@ def fetch():
     """Fetch pick ups."""
     # Get a file-like object using urllib2.urlopen
     base_url = 'https://napsix.mdzol.com/'
-    filter = 'index.php?r=search%2Fcategory&slug=vehiculos&search%5Bsort%5D=date_desc&search%5Bcategories%5D=&search%5Bcategories%5D%5B%5D=64&search%5Bcategories%5D%5B%5D=25&search%5BpriceFrom%5D=&search%5BpriceTo%5D=&search%5Battribs%5D%5B7%5D%5B%5D=Honda&search%5BmainLocation%5D=7&search%5Blocations%5D=&search%5Bfiltered%5D=1'
+    filter = 'index.php?r=search%2Fcategory&slug=vehiculos&search%5Bsort%5D=date_desc&search%5Bcategories%5D=&search%5Bcategories%5D%5B%5D=64&search%5Bcategories%5D%5B%5D=25&search%5BpriceFrom%5D=&search%5BpriceTo%5D=&search%5Battribs%5D%5B7%5D%5B%5D=Fiat&search%5BmainLocation%5D=7&search%5Blocations%5D=&search%5Bfiltered%5D=1'
     html = common.fetch_html(base_url + filter)
 
     soup = BeautifulSoup(html, features="html.parser")
@@ -37,7 +37,7 @@ def fetch():
 
         data = {}
 
-        model = re.search('HR-?V', card_item.text, re.IGNORECASE)
+        model = re.search('Toro', card_item.text, re.IGNORECASE)
 
         if model:
 
@@ -49,7 +49,7 @@ def fetch():
             data['id'] = int(id_item['data-id'])
             data['link'] = base_url + link_item['href'][1:]
 
-            year = re.search('201[7-9]', card_item.text, re.IGNORECASE)
+            year = re.search('201[6-9]', card_item.text, re.IGNORECASE)
 
             if year and year.group(0):
                 data['year'] = year.group(0)

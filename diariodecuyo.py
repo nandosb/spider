@@ -22,7 +22,7 @@ def fetch():
 
         info = card_item.text.strip()
 
-        model = re.search('HR-?V', info, re.IGNORECASE)
+        model = re.search('Toro', info, re.IGNORECASE)
 
         data = {}
 
@@ -30,7 +30,7 @@ def fetch():
 
             data['model'] = model.group(0)
 
-            year = re.search('201[7-9]', info, re.IGNORECASE)
+            year = re.search('201[6-9]', info, re.IGNORECASE)
 
             if year and year.group(0):
 

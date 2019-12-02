@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 def fetch():
     """Fetch pick ups."""
     base_url = 'https://clasificados.losandes.com.ar'
-    filter = '/mira/sSearch?m=automotores#filter-sidebar'
+    filter = '/mira/sSearch?m=automotores'
 
     html = common.fetch_html(base_url + filter)
 
@@ -21,14 +21,14 @@ def fetch():
     for card_item in soup.select('div[class*="public-ad"]'):
         info = card_item.find('h5', {'class': 'font-bold'}).text.strip()
 
-        model = re.search('HR-?V', info, re.IGNORECASE)
+        model = re.search('Toro', info, re.IGNORECASE)
 
         data = {}
 
         if model and model.group(0):
             data['model'] = model.group(0)
 
-            year = re.search('201[7-9]', info, re.IGNORECASE)
+            year = re.search('201[6-9]', info, re.IGNORECASE)
 
             if year and year.group(0):
 
