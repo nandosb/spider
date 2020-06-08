@@ -22,7 +22,7 @@ def fetch():
 
         info = card_item.text.strip()
 
-        model = re.search('Toro', info, re.IGNORECASE)
+        model = re.search('ecosport', info, re.IGNORECASE)
 
         data = {}
 
@@ -60,8 +60,8 @@ def main():
 
     vehicles, new_id = common.clean_candidates(vehicles_candidates, last_id)
 
-    print vehicles
-    print last_id
+    print(vehicles)
+    print(last_id)
 
     # if new vehicles...
     if len(vehicles):

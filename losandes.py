@@ -10,7 +10,9 @@ from bs4 import BeautifulSoup
 def fetch():
     """Fetch pick ups."""
     base_url = 'https://clasificados.losandes.com.ar'
-    filter = '/mira/sSearch?m=automotores'
+    filter = '/mira/sSearch/m/automotores'
+
+    print (base_url + filter)
 
     html = common.fetch_html(base_url + filter)
 
@@ -21,7 +23,7 @@ def fetch():
     for card_item in soup.select('div[class*="public-ad"]'):
         info = card_item.find('h5', {'class': 'font-bold'}).text.strip()
 
-        model = re.search('Toro', info, re.IGNORECASE)
+        model = re.search('ecosport', info, re.IGNORECASE)
 
         data = {}
 
@@ -55,8 +57,8 @@ def main():
 
     vehicles, new_id = common.clean_candidates(vehicles_candidates, last_id)
 
-    print vehicles
-    print last_id
+    print(vehicles)
+    print(last_id)
 
     # if new vehicles...
     if len(vehicles):
@@ -64,6 +66,7 @@ def main():
         email_body = json.dumps(vehicles)
         mailgun.send_simple_message(email_subject, email_body)
         common.set_last_id(new_id, 'losandes')
+
 
 if __name__ == '__main__':
     main()

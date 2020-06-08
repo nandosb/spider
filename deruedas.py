@@ -11,7 +11,9 @@ def fetch():
     """Fetch pick ups."""
     # Get a file-like object using urllib2.urlopen
     base_url = 'https://www.deruedas.com.ar/'
-    filter = 'bus.asp?segmento=1'
+    filter = 'busDR.asp?segmento=0'
+
+    print (base_url + filter)
 
     html = common.fetch_html(base_url + filter)
 
@@ -20,41 +22,40 @@ def fetch():
     vehicles = []
     # Loop over all <tr> elements with class 'ec_bg1_tr' or 'ec_bg2_tr'
     for div in soup.find_all(id=re.compile('car_')):
-        card = div.find('a', {'class': 'titulo'}).parent.parent.parent
+        card = div
 
         data = {}
 
         data['id'] = int(div['id'][4:])
 
         brand = re.search(
-            'Fiat',
+            'Ford',
             card.text,
             re.IGNORECASE
         )
 
         if brand:
             data['brand'] = brand.group(0)
-            model = re.search('Toro', card.text, re.IGNORECASE)
+            model = re.search('ecosport', card.text, re.IGNORECASE)
 
             if model:
-                data['model'] = model.group(0)
-                year = re.search('201[6-9]', card.text, re.IGNORECASE)
+                data['link'] = base_url + 'result.asp?cod={}'.format(data['id'])
 
+                data['model'] = model.group(0)
+
+                year = re.search('201[4-9]', card.text, re.IGNORECASE)
                 if year:
                     data['year'] = year.group(0)
-                    data['link'] = base_url + 'result.asp?cod={}'.format(data['id'])
 
-                    price = re.search(
-                        '\$ [0-9]{6,7}',
-                        card.text,
-                        re.IGNORECASE
-                    )
-
-                    if price:
-                        data['price'] = price.group(0)
+                price = re.search(
+                    '\$ [0-9]{3}.{3,4}',
+                    card.text,
+                    re.IGNORECASE
+                )
+                if price:
+                    data['price'] = price.group(0)
 
                     vehicles.append(data)
-
     return vehicles
 
 
@@ -66,8 +67,8 @@ def main():
 
     vehicles, new_id = common.clean_candidates(vehicles_candidates, last_id)
 
-    print vehicles
-    print last_id
+    print(vehicles)
+    print(last_id)
 
     # if new vehicles...
     if len(vehicles):
@@ -75,6 +76,7 @@ def main():
         email_body = json.dumps(vehicles)
         mailgun.send_simple_message(email_subject, email_body)
         common.set_last_id(new_id, 'deruedas')
+
 
 if __name__ == '__main__':
     main()
