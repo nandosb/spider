@@ -23,14 +23,14 @@ def fetch():
     for card_item in soup.select('div[class*="public-ad"]'):
         info = card_item.find('h5', {'class': 'font-bold'}).text.strip()
 
-        model = re.search('ecosport', info, re.IGNORECASE)
+        model = re.search('kuga|tucson', info, re.IGNORECASE)
 
         data = {}
 
         if model and model.group(0):
             data['model'] = model.group(0)
 
-            year = re.search('201[6-9]', info, re.IGNORECASE)
+            year = re.search('201[0-9]', info, re.IGNORECASE)
 
             if year and year.group(0):
 

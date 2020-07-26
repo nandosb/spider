@@ -11,7 +11,7 @@ def fetch():
     """Fetch pick ups."""
     # Get a file-like object using urllib2.urlopen
     base_url = 'https://www.deruedas.com.ar/'
-    filter = 'busDR.asp?segmento=0'
+    filter = 'busDR.asp'
 
     print (base_url + filter)
 
@@ -29,14 +29,14 @@ def fetch():
         data['id'] = int(div['id'][4:])
 
         brand = re.search(
-            'Ford',
+            'Ford|hyundai',
             card.text,
             re.IGNORECASE
         )
 
         if brand:
             data['brand'] = brand.group(0)
-            model = re.search('ecosport', card.text, re.IGNORECASE)
+            model = re.search('kuga|ecosport', card.text, re.IGNORECASE)
 
             if model:
                 data['link'] = base_url + 'result.asp?cod={}'.format(data['id'])

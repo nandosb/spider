@@ -22,7 +22,7 @@ def fetch():
 
         info = card_item.text.strip()
 
-        model = re.search('ecosport', info, re.IGNORECASE)
+        model = re.search('kuga|ecosport', info, re.IGNORECASE)
 
         data = {}
 
@@ -30,7 +30,7 @@ def fetch():
 
             data['model'] = model.group(0)
 
-            year = re.search('201[6-9]', info, re.IGNORECASE)
+            year = re.search('201[0-9]', info, re.IGNORECASE)
 
             if year and year.group(0):
 
@@ -67,7 +67,7 @@ def main():
     if len(vehicles):
         email_subject = "Nuevas camionetas Diario de Cuyo"
         email_body = json.dumps(vehicles)
-        mailgun.send_simple_message(email_subject, email_body)
+        # mailgun.send_simple_message(email_subject, email_body)
         common.set_last_id(new_id, 'diariodecuyo')
 
 
