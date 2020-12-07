@@ -37,7 +37,7 @@ def fetch():
 
         data = {}
 
-        model = re.search('kuga|tucson', card_item.text, re.IGNORECASE)
+        model = re.search(common.get_model_regex(), card_item.text, re.IGNORECASE)
 
         if model:
 
@@ -49,7 +49,7 @@ def fetch():
             data['id'] = int(id_item['data-id'])
             data['link'] = base_url + link_item['href'][1:]
 
-            year = re.search('201[0-9]', card_item.text, re.IGNORECASE)
+            year = re.search(common.get_year_regex(), card_item.text, re.IGNORECASE)
 
             if year and year.group(0):
                 data['year'] = year.group(0)

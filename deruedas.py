@@ -29,21 +29,31 @@ def fetch():
         data['id'] = int(div['id'][4:])
 
         brand = re.search(
-            'Ford|hyundai',
+            common.get_brand_regex(),
             card.text,
             re.IGNORECASE
         )
 
         if brand:
             data['brand'] = brand.group(0)
-            model = re.search('kuga|ecosport', card.text, re.IGNORECASE)
+
+            model = re.search(
+                common.get_model_regex(),
+                card.text,
+                re.IGNORECASE
+            )
 
             if model:
                 data['link'] = base_url + 'result.asp?cod={}'.format(data['id'])
 
                 data['model'] = model.group(0)
 
-                year = re.search('201[4-9]', card.text, re.IGNORECASE)
+                year = re.search(
+                    common.get_year_regex(),
+                    card.text,
+                    re.IGNORECASE
+                )
+
                 if year:
                     data['year'] = year.group(0)
 

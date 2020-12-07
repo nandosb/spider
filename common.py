@@ -3,6 +3,18 @@ import urllib2
 import ssl
 
 
+def get_brand_regex():
+    return "Ford|Hyundai|Renault|Kia|Honda"
+
+
+def get_model_regex():
+    return "kuga|eco(\s)?sport|Tucson|kwid|Sorento|[h|c]r[-|\s]?v"
+
+
+def get_year_regex():
+    return "201[1-7]"
+
+
 def get_known_ids(provider):
     """Get all the knonw ids for a provider."""
     filename = ('known_ids_{}.txt').format(provider)

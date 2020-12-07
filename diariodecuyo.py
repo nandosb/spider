@@ -22,7 +22,7 @@ def fetch():
 
         info = card_item.text.strip()
 
-        model = re.search('kuga|ecosport', info, re.IGNORECASE)
+        model = re.search(common.get_model_regex(), info, re.IGNORECASE)
 
         data = {}
 
@@ -30,7 +30,7 @@ def fetch():
 
             data['model'] = model.group(0)
 
-            year = re.search('201[0-9]', info, re.IGNORECASE)
+            year = re.search(common.get_year_regex(), info, re.IGNORECASE)
 
             if year and year.group(0):
 
