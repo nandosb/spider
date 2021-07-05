@@ -44,11 +44,11 @@ def main():
     """App controller."""
     provider = 'zonaprop'
     urls = [
-        'casas-alquiler-maipu-con-pileta-menos-40000-pesos.html',
-        'casas-alquiler-lujan-de-cuyo-con-pileta-menos-40000-pesos.html',
-        'casas-alquiler-godoy-cruz-con-pileta-menos-40000-pesos.html',
-        'casas-alquiler-chacras-de-coria-con-pileta-menos-40000-pesos.html',
-        'casas-alquiler-carrodilla-con-pileta-menos-40000-pesos.html',
+        'casas-alquiler-maipu-con-pileta-menos-140000-pesos.html',
+        'casas-alquiler-lujan-de-cuyo-con-pileta-menos-140000-pesos.html',
+        'casas-alquiler-godoy-cruz-con-pileta-menos-140000-pesos.html',
+        'casas-alquiler-chacras-de-coria-con-pileta-menos-140000-pesos.html',
+        'casas-alquiler-carrodilla-con-pileta-menos-140000-pesos.html',
     ]
     houses_candidates = []
 
@@ -60,8 +60,8 @@ def main():
 
     houses = common.clean_candidates_id_list(houses_candidates, known_ids)
 
-    print houses
-    print known_ids
+    print(houses)
+    print(known_ids)
 
     # if new houses...
     if len(houses):

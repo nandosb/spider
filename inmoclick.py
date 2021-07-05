@@ -11,7 +11,7 @@ def fetch():
     """Fetch pick ups."""
     # Get a file-like object using urllib2.urlopen
     base_url = 'https://www.inmoclick.com.ar/'
-    filter = 'inmuebles/alquiler/casas?favoritos=0&limit=48&prevEstadoMap=&localidades=7%2C8%2C502&precio%5Bmin%5D=&precio%5Bmax%5D=60000&moneda=1&sup_cubierta%5Bmin%5D=&sup_cubierta%5Bmax%5D=&sup_total%5Bmin%5D=&sup_total%5Bmax%5D='
+    filter = 'inmuebles/alquiler/casas?favoritos=0&limit=48&prevEstadoMap=&localidades=7%2C8%2C1&precio%5Bmin%5D=&precio%5Bmax%5D=&moneda=1&sup_cubierta%5Bmin%5D=&sup_cubierta%5Bmax%5D=&sup_total%5Bmin%5D=&sup_total%5Bmax%5D='
     html = common.fetch_html(base_url + filter)
 
     soup = BeautifulSoup(html, features="html.parser")
@@ -54,8 +54,8 @@ def main():
 
     houses = common.clean_candidates_id_list(houses_candidates, known_ids)
 
-    print houses
-    print known_ids
+    print(houses)
+    print(known_ids)
 
     # if new houses...
     if len(houses):
